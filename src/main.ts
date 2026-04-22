@@ -9,7 +9,7 @@ const logger = new Logger('Bootstrap');
 async function bootstrap() {
   logger.log('');
   logger.log('╔═══════════════════════════════════════════════╗');
-  logger.log('║   📡 VEILLE TECHNOLOGIQUE — K-ElectroniK     ║');
+  logger.log('║    VEILLE TECHNOLOGIQUE — K-ElectroniK     ║');
   logger.log('║   MSPR Bloc 1 RNCP35584                       ║');
   logger.log('╚═══════════════════════════════════════════════╝');
   logger.log('');
@@ -23,13 +23,13 @@ async function bootstrap() {
 
   await app.listen(3000);
   logger.log('');
-  logger.log('🌐 Interface web : http://localhost:3000');
-  logger.log('📡 API REST      : http://localhost:3000/api/articles');
+  logger.log(' Interface web : http://localhost:3000');
+  logger.log(' API REST      : http://localhost:3000/api/articles');
   logger.log('');
 
   // Lancement immédiat de la collecte au démarrage
   const veilleService = app.get(VeilleService);
-  logger.log('▶  Première collecte en cours...');
+  logger.log('  Première collecte en cours...');
   veilleService.run().catch(err => logger.error('Erreur collecte:', err));
 }
 

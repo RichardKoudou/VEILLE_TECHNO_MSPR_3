@@ -1,15 +1,15 @@
-# 📡 Veille Technologique — K-ElectroniK
+#  Veille Technologique — K-ElectroniK
 
 Outil de veille technologique **push** avec interface web intégrée.
-MSPR Bloc 1 RNCP35584 — *Analyser et définir la stratégie d'un système d'information.*
+MSPR Bloc 1 — *Analyser et définir la stratégie d'un système d'information.*
 
 ---
 
-## 🚀 Lancement en 30 secondes
+##  Lancement en 30 secondes
 
 ### Prérequis : Node.js ≥ 18  →  https://nodejs.org
 
-### Option A — Script standalone (recommandé, zéro installation)
+### Option A — Lancement de l'app via exécution de script (zéro installation)
 
 ```bash
 node test-local.js
@@ -28,7 +28,7 @@ Puis ouvrez **http://localhost:3000**.
 
 ---
 
-## 🖥️ Interface web
+##  Interface web
 
 | Fonctionnalité | Description |
 |---|---|
@@ -42,22 +42,22 @@ Puis ouvrez **http://localhost:3000**.
 
 ---
 
-## 🎯 Thématiques surveillées
+##  Thématiques surveillées
 
 | Thématique | Mots-clés (extrait) |
 |---|---|
-| 🏛️ Gouvernance SI | COBIT, ITIL, CIO, DSI, alignement IT |
-| 💼 ERP / CRM | SAP, Salesforce, marketing automation |
-| 🔒 Cybersécurité | ISO 27001, RGPD, ransomware, zero trust |
-| ☁️ Cloud & Infra | AWS, Azure, DevOps, Kubernetes |
-| 🤖 IA & IoT | LLM, ChatGPT, blockchain, robotique |
-| 📊 Lean IT | Agile, KPI, SLA, ITSM |
-| 🌱 Green IT | ISO 26000, RSE, empreinte carbone |
-| 🔄 BPM | BPMN, ISO 9001, workflow |
+|  Gouvernance SI | COBIT, ITIL, CIO, DSI, alignement IT |
+|  ERP / CRM | SAP, Salesforce, marketing automation |
+|  Cybersécurité | ISO 27001, RGPD, ransomware, zero trust |
+|  Cloud & Infra | AWS, Azure, DevOps, Kubernetes |
+|  IA & IoT | LLM, ChatGPT, blockchain, robotique |
+|  Lean IT | Agile, KPI, SLA, ITSM |
+|  Green IT | ISO 26000, RSE, empreinte carbone |
+|  BPM | BPMN, ISO 9001, workflow |
 
 ---
 
-## 📡 API REST
+##  API REST
 
 | Endpoint | Description |
 |---|---|
@@ -68,7 +68,7 @@ Puis ouvrez **http://localhost:3000**.
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 veille-tech/
