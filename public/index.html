@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Veille Tech — K-ElectroniK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & tokens ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #080b0f;
+      --bg2:      #0d1117;
+      --bg3:      #121820;
+      --border:   #1c2533;
+      --border2:  #253040;
+      --signal:   #00e5a0;
+      --signal2:  #00b37a;
+      --signal3:  rgba(0,229,160,.08);
+      --amber:    #f59e0b;
+      --red:      #ef4444;
+      --blue:     #38bdf8;
+      --muted:    #4a6070;
+      --text:     #cdd9e5;
+      --text2:    #8ba3b8;
+      --mono:     'JetBrains Mono', monospace;
+      --sans:     'Syne', sans-serif;
+      --radius:   6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Grid noise background ─────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,160,.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,160,.015) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Scrollbar ─────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+    /* ── Layout ─────────────────────────────────────────── */
+    #app {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+    header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--signal);
+      letter-spacing: -.3px;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      white-space: nowrap;
+    }
+
+    .logo-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--signal);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,229,160,.4); }
+      50% { opacity: .7; box-shadow: 0 0 0 6px rgba(0,229,160,0); }
+    }
+
+    .header-subtitle {
+      color: var(--muted);
+      font-size: 11px;
+      border-left: 1px solid var(--border);
+      padding-left: 1rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .last-update {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .last-update span { color: var(--signal); }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .38rem .9rem;
+      border-radius: var(--radius);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn-signal {
+      background: var(--signal3);
+      border-color: var(--signal2);
+      color: var(--signal);
+    }
+    .btn-signal:hover { background: rgba(0,229,160,.15); }
+    .btn-signal:active { transform: scale(.97); }
+    .btn-signal:disabled { opacity: .4; cursor: not-allowed; }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--border2);
+      color: var(--text2);
+    }
+    .btn-ghost:hover { border-color: var(--signal); color: var(--signal); }
+
+    /* ── Stats bar ──────────────────────────────────────── */
+    .stats-bar {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: .6rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      overflow-x: auto;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      white-space: nowrap;
+      font-size: 11px;
+      color: var(--text2);
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--signal);
+      font-family: var(--sans);
+      line-height: 1;
+    }
+
+    .stat-sep {
+      width: 1px;
+      height: 24px;
+      background: var(--border);
+    }
+
+    .source-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .source-dot.ok { background: var(--signal); }
+    .source-dot.error { background: var(--red); }
+    .source-dot.unknown { background: var(--muted); }
+
+    /* ── Main layout ─────────────────────────────────────── */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 0;
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────── */
+    aside {
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      padding: 1.25rem 0;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px - 41px);
+      overflow-y: auto;
+    }
+
+    .sidebar-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 1.25rem .75rem;
+    }
+
+    .topic-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: .55rem 1.25rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text2);
+      transition: all .12s;
+      text-align: left;
+      gap: .5rem;
+      border-left: 2px solid transparent;
+    }
+
+    .topic-btn:hover { background: var(--bg3); color: var(--text); }
+
+    .topic-btn.active {
+      background: var(--signal3);
+      border-left-color: var(--signal);
+      color: var(--signal);
+    }
+
+    .topic-label {
+      flex: 1;
+      font-size: 11.5px;
+      line-height: 1.3;
+    }
+
+    .topic-count {
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 10px;
+      padding: .1rem .35rem;
+      border-radius: 3px;
+      min-width: 22px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .topic-btn.active .topic-count {
+      background: rgba(0,229,160,.15);
+      color: var(--signal);
+    }
+
+    /* ── Content area ────────────────────────────────────── */
+    .content {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      height: calc(100vh - 56px - 41px);
+    }
+
+    /* ── Toolbar ─────────────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: .75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    input[type="search"] {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .45rem .75rem .45rem 2.1rem;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    input[type="search"]:focus { border-color: var(--signal); }
+    input[type="search"]::placeholder { color: var(--muted); }
+
+    .result-count {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── Articles grid ───────────────────────────────────── */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+    }
+
+    /* ── Article card ────────────────────────────────────── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+      cursor: pointer;
+      transition: border-color .15s, transform .15s, background .15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--signal), transparent);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+
+    .card:hover {
+      border-color: var(--border2);
+      background: var(--bg3);
+      transform: translateY(-1px);
+    }
+    .card:hover::before { opacity: 1; }
+
+    .card-source {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+
+    .card-score {
+      display: flex;
+      align-items: center;
+      gap: .25rem;
+      color: var(--signal);
+      font-size: 10px;
+    }
+
+    .card-title {
+      font-family: var(--sans);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .card-desc {
+      font-size: 11.5px;
+      color: var(--text2);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: .12rem .4rem;
+      border-radius: 3px;
+      background: rgba(0,229,160,.07);
+      color: var(--signal2);
+      border: 1px solid rgba(0,229,160,.15);
+      white-space: nowrap;
+    }
+
+    .card-date {
+      font-size: 10px;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    /* ── Modal ───────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,11,15,.85);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(12px) scale(.98);
+      transition: transform .2s;
+      overflow: hidden;
+    }
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .modal-source-line {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--muted);
+      margin-bottom: .4rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .modal-title {
+      font-family: var(--sans);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .modal-close {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      transition: all .15s;
+    }
+    .modal-close:hover { border-color: var(--signal); color: var(--signal); }
+
+    .modal-body {
+      padding: 1.25rem 1.5rem;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.7;
+      border-left: 2px solid var(--border2);
+      padding-left: 1rem;
+    }
+
+    .modal-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75rem;
+    }
+
+    .meta-block {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .75rem;
+    }
+
+    .meta-block-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+
+    .meta-block-value {
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .keywords-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+    }
+
+    .topics-list {
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+    }
+
+    .topic-pill {
+      font-size: 11px;
+      color: var(--text2);
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: .75rem;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    /* ── States ──────────────────────────────────────────── */
+    .state-loading, .state-empty, .state-error {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      gap: 1rem;
+      color: var(--muted);
+    }
+
+    .spinner {
+      width: 32px; height: 32px;
+      border: 2px solid var(--border);
+      border-top-color: var(--signal);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .scan-line {
+      font-size: 12px;
+      color: var(--signal);
+      animation: blink .9s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── Pagination ──────────────────────────────────────── */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .page-btn {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      padding: .35rem .7rem;
+      border-radius: var(--radius);
+      font-family: var(--mono);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all .12s;
+    }
+    .page-btn:hover { border-color: var(--signal); color: var(--signal); }
+    .page-btn.active {
+      background: var(--signal3);
+      border-color: var(--signal);
+      color: var(--signal);
+    }
+    .page-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+    /* ── Scanning animation ──────────────────────────────── */
+    .scanning-bar {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--signal), transparent);
+      background-size: 30% 100%;
+      animation: scan 2s linear infinite;
+    }
+    @keyframes scan {
+      from { background-position: -30% 0; }
+      to   { background-position: 130% 0; }
+    }
+
+    /* ── Toasts ──────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--bg2);
+      border: 1px solid var(--signal2);
+      color: var(--signal);
+      padding: .6rem 1.1rem;
+      border-radius: var(--radius);
+      font-size: 12px;
+      z-index: 300;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: all .25s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .main-layout { grid-template-columns: 1fr; }
+      aside { display: none; }
+      .content { height: auto; }
+      .header-subtitle { display: none; }
+      .stats-bar { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <div class="logo">
+        <div class="logo-dot"></div>
+        VEILLE//TECH
+      </div>
+      <div class="header-subtitle">K-ElectroniK · MSPR Bloc 1 RNCP35584</div>
+    </div>
+    <div class="header-right">
+      <div class="last-update" id="lastUpdate">— chargement...</div>
+      <button class="btn btn-signal" id="refreshBtn" onclick="triggerRefresh()">
+        ↺ Actualiser
+      </button>
+    </div>
+  </header>
+
+  <!-- Scanning bar -->
+  <div class="scanning-bar" id="scanBar" style="display:none"></div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-item">
+      <div class="stat-value" id="statTotal">—</div>
+      <div>articles<br>retenus</div>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-item" id="sourcesStatus"></div>
+  </div>
+
+  <!-- Main -->
+  <div class="main-layout">
+
+    <!-- Sidebar -->
+    <aside>
+      <div class="sidebar-title">Thématiques</div>
+      <div id="topicList"></div>
+    </aside>
+
+    <!-- Content -->
+    <div class="content">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="search" id="searchInput" placeholder="Rechercher dans les articles..." />
+        </div>
+        <div class="result-count" id="resultCount"></div>
+      </div>
+
+      <div class="articles-grid" id="articlesGrid">
+        <div class="state-loading">
+          <div class="spinner"></div>
+          <div class="scan-line">collecte en cours_</div>
+        </div>
+      </div>
+
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div style="flex:1;min-width:0">
+        <div class="modal-source-line">
+          <span id="modalSource"></span>
+          <span>·</span>
+          <span id="modalDate"></span>
+        </div>
+        <div class="modal-title" id="modalTitle"></div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-meta">
+        <div class="meta-block">
+          <div class="meta-block-label">Score de pertinence</div>
+          <div class="meta-block-value" id="modalScore"></div>
+        </div>
+        <div class="meta-block">
+          <div class="meta-block-label">Mots-clés détectés</div>
+          <div class="keywords-list" id="modalKeywords"></div>
+        </div>
+        <div class="meta-block" style="grid-column:1/-1">
+          <div class="meta-block-label">Thématiques</div>
+          <div class="topics-list" id="modalTopics"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModalDirect()">Fermer</button>
+      <a id="modalLink" href="#" target="_blank" rel="noopener" class="btn btn-signal">
+        Lire l'article ↗
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────
+const state = {
+  topic: 'all',
+  q: '',
+  page: 1,
+  limit: 18,
+  total: 0,
+  pages: 0,
+  articles: [],
+  topics: [],
+  stats: null,
+  loading: false,
+};
+
+// ── API ───────────────────────────────────────────────────────────
+async function api(path) {
+  const r = await fetch(path);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+async function init() {
+  await Promise.all([loadTopics(), loadStats()]);
+  await loadArticles();
+
+  // Refresh auto toutes les 30s pour les stats
+  setInterval(async () => { await loadStats(); }, 30000);
+}
+
+// ── Topics ────────────────────────────────────────────────────────
+async function loadTopics() {
+  try {
+    const data = await api('/api/topics');
+    state.topics = data;
+    renderTopics();
+  } catch(e) { console.warn('topics:', e); }
+}
+
+function renderTopics() {
+  const list = document.getElementById('topicList');
+  const all = state.topics.reduce((s, t) => s + t.count, 0);
+
+  list.innerHTML = `
+    <button class="topic-btn ${state.topic === 'all' ? 'active' : ''}" onclick="setTopic('all')">
+      <span class="topic-label">📡 Tous les articles</span>
+      <span class="topic-count">${all}</span>
+    </button>
+  ` + state.topics.map(t => `
+    <button class="topic-btn ${state.topic === t.id ? 'active' : ''}" onclick="setTopic('${t.id}')">
+      <span class="topic-label">${t.label}</span>
+      <span class="topic-count">${t.count}</span>
+    </button>
+  `).join('');
+}
+
+function setTopic(id) {
+  state.topic = id;
+  state.page = 1;
+  renderTopics();
+  loadArticles();
+}
+
+// ── Stats ─────────────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const data = await api('/api/stats');
+    state.stats = data;
+    renderStats();
+  } catch(e) { console.warn('stats:', e); }
+}
+
+function renderStats() {
+  const s = state.stats;
+  if (!s) return;
+
+  document.getElementById('statTotal').textContent = s.totalArticles;
+
+  const lastRun = s.lastRun
+    ? new Date(s.lastRun).toLocaleString('fr-FR', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit' })
+    : 'jamais';
+
+  document.getElementById('lastUpdate').innerHTML =
+    `Dernière collecte : <span>${lastRun}</span>`;
+
+  const src = s.sources.map(s => `
+    <div class="stat-item">
+      <div class="source-dot ${s.status}"></div>
+      <span>${s.label}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('sourcesStatus').innerHTML =
+    `<span style="color:var(--muted);margin-right:.5rem">Sources :</span>` + src;
+
+  if (s.isRunning) {
+    document.getElementById('scanBar').style.display = 'block';
+    document.getElementById('refreshBtn').disabled = true;
+    document.getElementById('refreshBtn').textContent = '⟳ Collecte...';
+  } else {
+    document.getElementById('scanBar').style.display = 'none';
+    document.getElementById('refreshBtn').disabled = false;
+    document.getElementById('refreshBtn').textContent = '↺ Actualiser';
+  }
+}
+
+// ── Articles ──────────────────────────────────────────────────────
+async function loadArticles() {
+  state.loading = true;
+  showLoading();
+
+  try {
+    const params = new URLSearchParams({
+      topic: state.topic,
+      q: state.q,
+      page: state.page,
+      limit: state.limit,
+    });
+    const data = await api(`/api/articles?${params}`);
+    state.articles = data.items;
+    state.total = data.total;
+    state.pages = data.pages;
+    renderArticles();
+    renderPagination();
+    document.getElementById('resultCount').textContent =
+      `${data.total} article${data.total !== 1 ? 's' : ''}`;
+  } catch(e) {
+    showError();
+  } finally {
+    state.loading = false;
+  }
+}
+
+function showLoading() {
+  document.getElementById('articlesGrid').innerHTML = `
+    <div class="state-loading">
+      <div class="spinner"></div>
+      <div class="scan-line">recherche en cours_</div>
+    </div>`;
+  document.getElementById('pagination').innerHTML = '';
+}
+
+function showError() {
+  document.getElementById('articlesGrid').innerHTML = `
+    <div class="state-error">
+      <div style="font-size:2rem">⚠</div>
+      <div>Impossible de charger les articles.</div>
+      <div style="font-size:11px">Vérifiez que le serveur tourne sur :3000</div>
+    </div>`;
+}
+
+function renderArticles() {
+  const grid = document.getElementById('articlesGrid');
+  if (!state.articles.length) {
+    grid.innerHTML = `
+      <div class="state-empty">
+        <div style="font-size:2rem">◎</div>
+        <div>Aucun article trouvé.</div>
+        ${!state.stats?.totalArticles ? '<div style="font-size:11px">La collecte est peut-être encore en cours…</div>' : ''}
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = state.articles.map((a, i) => {
+    const date = a.pubDate
+      ? (() => { try { return new Date(a.pubDate).toLocaleDateString('fr-FR'); } catch { return ''; } })()
+      : '';
+    const tags = a.matchedKeywords.slice(0, 3).map(k =>
+      `<span class="tag">${esc(k)}</span>`
+    ).join('');
+
+    return `
+      <div class="card" onclick="openModal(${i})" style="animation:fadeUp .2s ease both;animation-delay:${i * 0.03}s">
+        <div class="card-source">
+          <span>${esc(a.source)}</span>
+          <span class="card-score">▲ ${a.relevanceScore}</span>
+        </div>
+        <div class="card-title">${esc(a.title)}</div>
+        ${a.description ? `<div class="card-desc">${esc(a.description)}</div>` : ''}
+        <div class="card-footer">
+          ${tags}
+          ${date ? `<span class="card-date">${date}</span>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Pagination ────────────────────────────────────────────────────
+function renderPagination() {
+  const el = document.getElementById('pagination');
+  if (state.pages <= 1) { el.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="goPage(${state.page - 1})" ${state.page === 1 ? 'disabled' : ''}>‹ Préc.</button>`;
+
+  const range = pagRange(state.page, state.pages);
+  range.forEach(p => {
+    if (p === '…') html += `<span class="page-btn" style="cursor:default">…</span>`;
+    else html += `<button class="page-btn ${p === state.page ? 'active' : ''}" onclick="goPage(${p})">${p}</button>`;
+  });
+
+  html += `<button class="page-btn" onclick="goPage(${state.page + 1})" ${state.page === state.pages ? 'disabled' : ''}>Suiv. ›</button>`;
+  el.innerHTML = html;
+}
+
+function pagRange(cur, total) {
+  if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
+  if (cur <= 4) return [1,2,3,4,5,'…',total];
+  if (cur >= total - 3) return [1,'…',total-4,total-3,total-2,total-1,total];
+  return [1,'…',cur-1,cur,cur+1,'…',total];
+}
+
+function goPage(p) {
+  if (p < 1 || p > state.pages) return;
+  state.page = p;
+  loadArticles();
+  document.querySelector('.content').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Search ────────────────────────────────────────────────────────
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.q = e.target.value;
+    state.page = 1;
+    loadArticles();
+  }, 350);
+});
+
+// ── Modal ─────────────────────────────────────────────────────────
+function openModal(idx) {
+  const a = state.articles[idx];
+  if (!a) return;
+
+  const date = a.pubDate
+    ? (() => { try { return new Date(a.pubDate).toLocaleString('fr-FR'); } catch { return a.pubDate; } })()
+    : '';
+
+  document.getElementById('modalSource').textContent = a.source;
+  document.getElementById('modalDate').textContent = date;
+  document.getElementById('modalTitle').textContent = a.title;
+  document.getElementById('modalDesc').textContent = a.description || '(Pas de description disponible)';
+  document.getElementById('modalScore').textContent = `${a.relevanceScore} keyword${a.relevanceScore !== 1 ? 's' : ''} matché${a.relevanceScore !== 1 ? 's' : ''}`;
+  document.getElementById('modalLink').href = a.link;
+
+  document.getElementById('modalKeywords').innerHTML = a.matchedKeywords
+    .map(k => `<span class="tag">${esc(k)}</span>`).join('');
+
+  document.getElementById('modalTopics').innerHTML = a.topics
+    .map(t => `<div class="topic-pill">• ${esc(t)}</div>`).join('');
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModalDirect();
+});
+
+// ── Refresh ───────────────────────────────────────────────────────
+async function triggerRefresh() {
+  try {
+    await fetch('/api/refresh', { method: 'POST' });
+    showToast('Collecte lancée — résultats dans quelques secondes…');
+    document.getElementById('refreshBtn').disabled = true;
+    document.getElementById('scanBar').style.display = 'block';
+
+    // Poll jusqu'à la fin
+    const poll = setInterval(async () => {
+      await loadStats();
+      if (!state.stats?.isRunning) {
+        clearInterval(poll);
+        await loadTopics();
+        await loadArticles();
+        showToast(`✓ ${state.total} articles mis à jour`);
+      }
+    }, 3000);
+  } catch(e) {
+    showToast('Erreur lors du lancement');
+  }
+}
+
+// ── Toast ─────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── Utils ─────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// CSS fadeUp keyframe
+const style = document.createElement('style');
+style.textContent = '@keyframes fadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }';
+document.head.appendChild(style);
+
+// ── Start ─────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
