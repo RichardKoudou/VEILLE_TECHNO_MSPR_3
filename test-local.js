@@ -115,7 +115,7 @@ async function collect() {
         console.log(`  ${e.message}`);
       }
     }
-    store.articles = all.map(scoreArticle).filter(a => a.relevanceScore >= 10)
+    store.articles = all.map(scoreArticle).filter(a => a.relevanceScore >= 5)
       .sort((a,b) => b.relevanceScore - a.relevanceScore || new Date(b.pubDate)-new Date(a.pubDate));
     store.lastRun = new Date().toISOString();
     console.log(`\n ${store.articles.length} articles retenus`);
