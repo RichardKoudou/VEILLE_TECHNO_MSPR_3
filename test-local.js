@@ -17,14 +17,14 @@ const url   = require('url');
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const TOPICS = [
-  { id:'gouvernance_si', label:'🏛️ Gouvernance SI & Stratégie IT', keywords:['it governance','gouvernance it','it strategy','strategic alignment','cobit','itil','digital transformation','transformation digitale','enterprise architecture','it management','cio','dsi'] },
-  { id:'erp_crm',        label:'💼 ERP, CRM & Systèmes de gestion', keywords:['erp','crm','sap','salesforce','enterprise resource planning','customer relationship management','marketing automation','campaign management','prestashop','saas erp','cloud erp','warehouse management','wms'] },
-  { id:'cybersecurite',  label:'🔒 Cybersécurité & PSSI', keywords:['cybersecurity','cybersécurité','pssi','security policy','iso 27001','iso 27002','rgpd','gdpr','ransomware','data breach','zero trust','risk management','disaster recovery','business continuity','siem','soc','pentest','vulnerability','anssi','nis2','incident response'] },
-  { id:'cloud_infra',    label:'☁️ Cloud & Infrastructure', keywords:['cloud computing','aws','azure','gcp','hybrid cloud','multi-cloud','devops','ci/cd','docker','kubernetes','microservices','serverless','infrastructure as code','iac','cloud migration'] },
-  { id:'ia_emergent',    label:'🤖 IA, IoT & Technologies émergentes', keywords:['artificial intelligence','intelligence artificielle','machine learning','deep learning','generative ai','chatgpt','llm','iot','internet of things','blockchain','robotics','robotique','automation','rpa','edge computing','5g'] },
-  { id:'lean_performance',label:'📊 Lean IT & Performance SI', keywords:['lean it','lean management','agile','scrum','kanban','continuous improvement','kpi','sla','trs','okr','performance monitoring','observability','value stream','itsm','service management','it cost'] },
-  { id:'green_it',       label:'🌱 Green IT & RSE', keywords:['green it','sustainable it','informatique responsable','rse','csr','iso 26000','carbon footprint','empreinte carbone','numérique responsable','it sustainability','energy efficiency','pue','e-waste','digital sobriety'] },
-  { id:'bpm_processus',  label:'🔄 BPM & Processus métier', keywords:['bpm','bpmn','business process','process management','workflow','process automation','process mining','iso 9001','process mapping'] },
+  { id:'gouvernance_si', label:' Gouvernance SI & Stratégie IT', keywords:['it governance','gouvernance it','it strategy','strategic alignment','cobit','itil','digital transformation','transformation digitale','enterprise architecture','it management','cio','dsi'] },
+  { id:'erp_crm',        label:' ERP, CRM & Systèmes de gestion', keywords:['erp','crm','sap','salesforce','enterprise resource planning','customer relationship management','marketing automation','campaign management','prestashop','saas erp','cloud erp','warehouse management','wms'] },
+  { id:'cybersecurite',  label:' Cybersécurité & PSSI', keywords:['cybersecurity','cybersécurité','pssi','security policy','iso 27001','iso 27002','rgpd','gdpr','ransomware','data breach','zero trust','risk management','disaster recovery','business continuity','siem','soc','pentest','vulnerability','anssi','nis2','incident response'] },
+  { id:'cloud_infra',    label:' Cloud & Infrastructure', keywords:['cloud computing','aws','azure','gcp','hybrid cloud','multi-cloud','devops','ci/cd','docker','kubernetes','microservices','serverless','infrastructure as code','iac','cloud migration'] },
+  { id:'ia_emergent',    label:' IA, IoT & Technologies émergentes', keywords:['artificial intelligence','intelligence artificielle','machine learning','deep learning','generative ai','chatgpt','llm','iot','internet of things','blockchain','robotics','robotique','automation','rpa','edge computing','5g'] },
+  { id:'lean_performance',label:' Lean IT & Performance SI', keywords:['lean it','lean management','agile','scrum','kanban','continuous improvement','kpi','sla','trs','okr','performance monitoring','observability','value stream','itsm','service management','it cost'] },
+  { id:'green_it',       label:' Green IT & RSE', keywords:['green it','sustainable it','informatique responsable','rse','csr','iso 26000','carbon footprint','empreinte carbone','numérique responsable','it sustainability','energy efficiency','pue','e-waste','digital sobriety'] },
+  { id:'bpm_processus',  label:' BPM & Processus métier', keywords:['bpm','bpmn','business process','process management','workflow','process automation','process mining','iso 9001','process mapping'] },
 ];
 
 const RSS_SOURCES = [
@@ -99,26 +99,26 @@ function scoreArticle(a) {
 async function collect() {
   if (store.isRunning) return;
   store.isRunning = true;
-  console.log('\n🚀 Collecte en cours...');
+  console.log('\n Collecte en cours...');
   try {
     const all = [];
     for (const src of RSS_SOURCES) {
-      process.stdout.write(`  ⏳ ${src.label.padEnd(14)}`);
+      process.stdout.write(`   ${src.label.padEnd(14)}`);
       try {
         const xml = await fetchUrl(src.url);
         const arts = parseRSS(xml, src.label).slice(0, MAX_PER_SOURCE);
         all.push(...arts);
         store.sourcesStatus[src.label] = 'ok';
-        console.log(`✅  ${arts.length}`);
+        console.log(`  ${arts.length}`);
       } catch(e) {
         store.sourcesStatus[src.label] = 'error';
-        console.log(`❌  ${e.message}`);
+        console.log(`  ${e.message}`);
       }
     }
-    store.articles = all.map(scoreArticle).filter(a => a.relevanceScore >= 1)
+    store.articles = all.map(scoreArticle).filter(a => a.relevanceScore >= 10)
       .sort((a,b) => b.relevanceScore - a.relevanceScore || new Date(b.pubDate)-new Date(a.pubDate));
     store.lastRun = new Date().toISOString();
-    console.log(`\n✅ ${store.articles.length} articles retenus`);
+    console.log(`\n ${store.articles.length} articles retenus`);
 
     // Sauvegarder JSON
     const outDir = path.join(__dirname,'output');
@@ -183,9 +183,9 @@ if (args.includes('--collect')) {
     parsed.pathname.startsWith('/api/') ? handleApi(req,res,parsed) : serveStatic(req,res,parsed.pathname);
   }).listen(PORT, () => {
     console.log('\n╔════════════════════════════════════════════╗');
-    console.log('║  📡 VEILLE TECHNOLOGIQUE — K-ElectroniK   ║');
+    console.log('║   VEILLE TECHNOLOGIQUE — K-ElectroniK   ║');
     console.log('╚════════════════════════════════════════════╝');
-    console.log(`\n🌐 Ouvrez → http://localhost:${PORT}`);
+    console.log(`\n Ouvrez → http://localhost:${PORT}`);
     console.log('   Ctrl+C pour arrêter\n');
     collect().catch(console.error);
   });

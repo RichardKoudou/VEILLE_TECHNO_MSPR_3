@@ -47,7 +47,7 @@ export class VeilleService {
   /** Lancement automatique toutes les 6 heures (méthode push) */
   @Cron(CronExpression.EVERY_6_HOURS)
   async scheduledRun() {
-    this.logger.log('⏰ Scheduled veille run triggered...');
+    this.logger.log(' Scheduled veille run triggered...');
     await this.run();
   }
 
@@ -59,7 +59,7 @@ export class VeilleService {
     }
 
     this.isRunning = true;
-    this.logger.log('🚀 Démarrage de la veille technologique...');
+    this.logger.log(' Démarrage de la veille technologique...');
 
     try {
       // 1. Collecte parallèle
@@ -80,12 +80,12 @@ export class VeilleService {
         }
       });
 
-      this.logger.log(`📥 Total brut: ${allArticles.length} articles`);
+      this.logger.log(` Total brut: ${allArticles.length} articles`);
 
       // 2. Filtrage et stockage mémoire
       this.articles = this.filterService.filterAndScore(allArticles);
       this.lastRun = new Date();
-      this.logger.log(`✅ ${this.articles.length} articles pertinents retenus`);
+      this.logger.log(` ${this.articles.length} articles pertinents retenus`);
 
       // 3. Génération des fichiers de sortie (HTML + JSON)
       const grouped = this.filterService.groupByTopic(this.articles);
@@ -93,8 +93,8 @@ export class VeilleService {
       this.reportService.generateJSON(this.articles);
 
       this.logger.log('═══════════════════════════════════════════════');
-      this.logger.log(`  ✨ Veille terminée — ${this.articles.length} articles`);
-      this.logger.log('  🌐 Interface : http://localhost:3000');
+      this.logger.log(`   Veille terminée — ${this.articles.length} articles`);
+      this.logger.log('   Interface : http://localhost:3000');
       this.logger.log('═══════════════════════════════════════════════');
 
       return { count: this.articles.length };

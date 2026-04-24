@@ -29,13 +29,63 @@ export const VEILLE_CONFIG = {
       url: 'https://hnrss.org/best',
       label: 'hackernews',
     },
+    {
+      name: 'Le Monde Informatique',
+      url: 'https://www.lemondeinformatique.fr/flux-rss/thematique/toutes-les-actualites/1.xml',
+      label: 'lemondeinformatique',
+    },
+    {
+      name: 'Journal du Net',
+      url: 'https://www.journaldunet.com/solutions/rss/',
+      label: 'journaldunet',
+    },
+    {
+      name: 'ZDNet France',
+      url: 'https://www.zdnet.fr/feeds/rss/actualites/',
+      label: 'zdnet-fr',
+    },
+    {
+      name: 'Silicon.fr',
+      url: 'https://www.silicon.fr/feed',
+      label: 'silicon',
+    },
+    {
+      name: "Usine Digitale",
+      url: 'https://www.usine-digitale.fr/rss/all/',
+      label: 'usine-digitale',
+    },
+    {
+      name: 'ANSSI CERT-FR',
+      url: 'https://www.cert.ssi.gouv.fr/feed/',
+      label: 'anssi-cert',
+    },
+    {
+      name: 'CSO Online',
+      url: 'https://www.csoonline.com/feed/',
+      label: 'csoonline',
+    },
+    {
+      name: 'ITPro',
+      url: 'https://www.itpro.com/feed',
+      label: 'itpro',
+    },
+    {
+      name: 'Computer Weekly',
+      url: 'https://www.computerweekly.com/rss/IT-news.xml',
+      label: 'computerweekly',
+    },
+    {
+      name: 'MIT Technology Review',
+      url: 'https://www.technologyreview.com/feed/',
+      label: 'mit-techreview',
+    },
   ],
 
   // Thématiques MSPR → mots-clés associés
   TOPICS: [
     {
       id: 'gouvernance_si',
-      label: '🏛️ Gouvernance SI & Stratégie IT',
+      label: ' Gouvernance SI & Stratégie IT',
       keywords: [
         'IT governance', 'gouvernance IT', 'IT strategy', 'strategic alignment',
         'COBIT', 'ITIL', 'digital transformation', 'transformation digitale',
@@ -45,7 +95,7 @@ export const VEILLE_CONFIG = {
     },
     {
       id: 'erp_crm',
-      label: '💼 ERP, CRM & Systèmes de gestion',
+      label: ' ERP, CRM & Systèmes de gestion',
       keywords: [
         'ERP', 'CRM', 'SAP', 'Salesforce', 'enterprise resource planning',
         'customer relationship management', 'marketing automation', 'campaign management',
@@ -55,7 +105,7 @@ export const VEILLE_CONFIG = {
     },
     {
       id: 'cybersecurite',
-      label: '🔒 Cybersécurité & PSSI',
+      label: ' Cybersécurité & PSSI',
       keywords: [
         'cybersecurity', 'cybersécurité', 'PSSI', 'security policy', 'ISO 27001',
         'ISO 27002', 'RGPD', 'GDPR', 'ransomware', 'data breach', 'zero trust',
@@ -66,7 +116,7 @@ export const VEILLE_CONFIG = {
     },
     {
       id: 'cloud_infra',
-      label: '☁️ Cloud & Infrastructure',
+      label: ' Cloud & Infrastructure',
       keywords: [
         'cloud computing', 'AWS', 'Azure', 'GCP', 'hybrid cloud', 'multi-cloud',
         'DevOps', 'CI/CD', 'containerization', 'Docker', 'Kubernetes',
@@ -76,7 +126,7 @@ export const VEILLE_CONFIG = {
     },
     {
       id: 'ia_emergent',
-      label: '🤖 IA, IoT & Technologies émergentes',
+      label: ' IA, IoT & Technologies émergentes',
       keywords: [
         'artificial intelligence', 'intelligence artificielle', 'machine learning',
         'deep learning', 'generative AI', 'ChatGPT', 'LLM', 'IoT',
@@ -87,7 +137,7 @@ export const VEILLE_CONFIG = {
     },
     {
       id: 'lean_performance',
-      label: '📊 Lean IT & Performance SI',
+      label: ' Lean IT & Performance SI',
       keywords: [
         'Lean IT', 'lean management', 'agile', 'scrum', 'kanban',
         'continuous improvement', 'amélioration continue', 'KPI', 'SLA',
@@ -98,7 +148,7 @@ export const VEILLE_CONFIG = {
     },
     {
       id: 'green_it',
-      label: '🌱 Green IT & RSE',
+      label: ' Green IT & RSE',
       keywords: [
         'Green IT', 'sustainable IT', 'informatique responsable', 'RSE',
         'CSR', 'ISO 26000', 'carbon footprint', 'empreinte carbone',
@@ -109,7 +159,7 @@ export const VEILLE_CONFIG = {
     },
     {
       id: 'bpm_processus',
-      label: '🔄 BPM & Processus métier',
+      label: ' BPM & Processus métier',
       keywords: [
         'BPM', 'BPMN', 'business process', 'process management',
         'workflow', 'process automation', 'process mining',
@@ -123,7 +173,7 @@ export const VEILLE_CONFIG = {
   MAX_ARTICLES_PER_SOURCE: 30,
 
   // Score minimum pour inclure un article (nb de keywords matchés)
-  MIN_RELEVANCE_SCORE: 1,
+  MIN_RELEVANCE_SCORE: 10,
 
   // Langue prioritaire
   PREFERRED_LANG: ['fr', 'en'],
